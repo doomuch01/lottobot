@@ -1,0 +1,38 @@
+from flask import Flask, request, abort
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage
+
+app = Flask(__name__)
+
+# --- ใส่กุญแจที่คุณได้จากขั้นตอนที่ 1 ตรงนี้ ---
+line_bot_api = LineBotApi('2wVdz15IyqrPJrJZze8TS/3ULG4owRxj7j9yKwTsSk2IgJvAJWsBqdFkIX9YH+PS9EpS/OpnHpH5RlOqPGY4K0vdd5lzZnq//iezJqG0GmXEN6ofnj6o9dpmqs3Opo66KNmAPSSiYLGtmkkCy6G41gdB04t89/1O/w1cDnyilFU=
+')
+handler = WebhookHandler('36cf9163641c491e08b4be1913ae40cf')
+
+@app.route("/callback", methods=['POST'])
+def callback():
+    signature = request.headers['X-Line-Signature']
+    body = request.get_data(as_text=True)
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        abort(400)
+    return 'OK'
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    msg_from_user = event.message.text
+    
+    # ระบบตอบกลับแบบง่ายๆ
+    if msg_from_user == "ลาว":
+        reply = "🇱🇦 แนวทางหวยลาวคืนนี้: เน้น 8 กับ 5 ครับ!"
+    elif msg_from_user == "ฮานอย":
+        reply = "🇻🇳 ผลฮานอยล่าสุด: [รออัปเดต]"
+    else:
+        reply = "พิมพ์ 'ลาว' หรือ 'ฮานอย' เพื่อดูแนวทางครับ"
+        
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply))
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8080)
