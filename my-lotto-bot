@@ -6,9 +6,9 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 app = Flask(__name__)
 
 # --- ใส่กุญแจที่คุณได้จากขั้นตอนที่ 1 ตรงนี้ ---
-import os
-line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
-handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
+line_bot_api = LineBotApi('2wVdz15IyqrPJrJZze8TS/3ULG4owRxj7j9yKwTsSk2IgJvAJWsBqdFkIX9YH+PS9EpS/OpnHpH5RlOqPGY4K0vdd5lzZnq//iezJqG0GmXEN6ofnj6o9dpmqs3Opo66KNmAPSSiYLGtmkkCy6G41gdB04t89/1O/w1cDnyilFU=
+')
+handler = WebhookHandler('36cf9163641c491e08b4be1913ae40cf')
 
 @app.route("/callback", methods=['POST'])
 def callback():
